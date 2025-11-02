@@ -7,13 +7,13 @@ from pymongo.errors import ConnectionFailure, PyMongoError
 def get_db():
     """Підключається до локальної або хмарної бази MongoDB."""
     try:
-        # 🔹 Локальне підключення (можна замінити URI MongoDB Atlas)
+        # Локальне підключення (можна замінити URI MongoDB Atlas)
         client = MongoClient("mongodb://localhost:27017/")
         db = client["cats_db"]
-        print("✅ Успішне підключення до MongoDB!")
+        print("Успішне підключення до MongoDB!")
         return db
     except ConnectionFailure:
-        print("❌ Не вдалося підключитися до MongoDB!")
+        print("Не вдалося підключитися до MongoDB!")
         return None
 
 
@@ -27,9 +27,9 @@ def create_cat(collection, name, age, features):
             "features": features
         }
         result = collection.insert_one(cat)
-        print(f"🐾 Кота '{name}' додано з id: {result.inserted_id}")
+        print(f" Кота '{name}' додано з id: {result.inserted_id}")
     except PyMongoError as e:
-        print(f"❌ Помилка при створенні кота: {e}")
+        print(f" Помилка при створенні кота: {e}")
 
 
 # ====================== READ ======================
@@ -37,11 +37,11 @@ def read_all_cats(collection):
     """Виводить усіх котів із колекції."""
     try:
         cats = collection.find()
-        print("\n📜 Список усіх котів:")
+        print("\n Список усіх котів:")
         for cat in cats:
             print(cat)
     except PyMongoError as e:
-        print(f"❌ Помилка при зчитуванні: {e}")
+        print(f"Помилка при зчитуванні: {e}")
 
 
 def read_cat_by_name(collection, name):
@@ -49,11 +49,11 @@ def read_cat_by_name(collection, name):
     try:
         cat = collection.find_one({"name": name})
         if cat:
-            print(f"\n😺 Знайдено кота: {cat}")
+            print(f"\nЗнайдено кота: {cat}")
         else:
-            print(f"⚠️ Кота з ім'ям '{name}' не знайдено.")
+            print(f" Кота з ім'ям '{name}' не знайдено.")
     except PyMongoError as e:
-        print(f"❌ Помилка при пошуку кота: {e}")
+        print(f" Помилка при пошуку кота: {e}")
 
 
 # ====================== UPDATE ======================
@@ -62,11 +62,11 @@ def update_cat_age(collection, name, new_age):
     try:
         result = collection.update_one({"name": name}, {"$set": {"age": new_age}})
         if result.matched_count:
-            print(f"🔄 Вік кота '{name}' оновлено до {new_age}.")
+            print(f"Вік кота '{name}' оновлено до {new_age}.")
         else:
-            print(f"⚠️ Кота '{name}' не знайдено.")
+            print(f" Кота '{name}' не знайдено.")
     except PyMongoError as e:
-        print(f"❌ Помилка при оновленні віку: {e}")
+        print(f" Помилка при оновленні віку: {e}")
 
 
 def add_feature_to_cat(collection, name, new_feature):
@@ -74,11 +74,11 @@ def add_feature_to_cat(collection, name, new_feature):
     try:
         result = collection.update_one({"name": name}, {"$push": {"features": new_feature}})
         if result.matched_count:
-            print(f"✨ Нову характеристику '{new_feature}' додано коту '{name}'.")
+            print(f" Нову характеристику '{new_feature}' додано коту '{name}'.")
         else:
-            print(f"⚠️ Кота '{name}' не знайдено.")
+            print(f"Кота '{name}' не знайдено.")
     except PyMongoError as e:
-        print(f"❌ Помилка при оновленні характеристик: {e}")
+        print(f"Помилка при оновленні характеристик: {e}")
 
 
 # ====================== DELETE ======================
@@ -87,26 +87,26 @@ def delete_cat_by_name(collection, name):
     try:
         result = collection.delete_one({"name": name})
         if result.deleted_count:
-            print(f"🗑️ Кота '{name}' видалено.")
+            print(f" Кота '{name}' видалено.")
         else:
-            print(f"⚠️ Кота '{name}' не знайдено.")
+            print(f"Кота '{name}' не знайдено.")
     except PyMongoError as e:
-        print(f"❌ Помилка при видаленні кота: {e}")
+        print(f"Помилка при видаленні кота: {e}")
 
 
 def delete_all_cats(collection):
     """Видаляє всі записи з колекції."""
     try:
         result = collection.delete_many({})
-        print(f"🚨 Видалено всіх котів ({result.deleted_count} документів).")
+        print(f" Видалено всіх котів ({result.deleted_count} документів).")
     except PyMongoError as e:
-        print(f"❌ Помилка при видаленні всіх котів: {e}")
+        print(f" Помилка при видаленні всіх котів: {e}")
 
 
 # ====================== MAIN ======================
 if __name__ == "__main__":
     db = get_db()
-    if db:
+    if db is not None:
         cats = db.cats  # колекція "cats"
 
         # ---- Приклади викликів ----

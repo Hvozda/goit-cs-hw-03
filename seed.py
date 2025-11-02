@@ -5,7 +5,7 @@ import random
 # Ініціалізація Faker
 fake = Faker()
 
-# 🔌 Підключення до бази даних PostgreSQL
+# Підключення до бази даних PostgreSQL
 conn = psycopg2.connect(
     dbname="task_manager",
     user="postgres",       # ← заміни, якщо в тебе інше ім'я користувача
@@ -15,23 +15,23 @@ conn = psycopg2.connect(
 )
 cur = conn.cursor()
 
-# 🧹 Спочатку очищаємо таблиці (щоб уникнути дублікатів)
+# Спочатку очищаємо таблиці (щоб уникнути дублікатів)
 cur.execute("TRUNCATE tasks RESTART IDENTITY CASCADE;")
 cur.execute("TRUNCATE users RESTART IDENTITY CASCADE;")
 cur.execute("TRUNCATE status RESTART IDENTITY CASCADE;")
 
-# 📋 Додаємо статуси
+# Додаємо статуси
 statuses = ['new', 'in progress', 'completed']
 for s in statuses:
     cur.execute("INSERT INTO status (name) VALUES (%s) ON CONFLICT (name) DO NOTHING;", (s,))
 
-# 👤 Створюємо 10 користувачів
+# Створюємо 10 користувачів
 for _ in range(10):
     fullname = fake.name()
     email = fake.unique.email()
     cur.execute("INSERT INTO users (fullname, email) VALUES (%s, %s);", (fullname, email))
 
-# 📝 Створюємо 20 завдань
+# Створюємо 20 завдань
 for _ in range(20):
     title = fake.sentence(nb_words=4)
     description = fake.text(max_nb_chars=100)
@@ -42,11 +42,11 @@ for _ in range(20):
         (title, description, status_id, user_id)
     )
 
-# 💾 Зберігаємо зміни
+# Зберігаємо зміни
 conn.commit()
 
-# 🔚 Закриваємо з'єднання
+# Закриваємо з'єднання
 cur.close()
 conn.close()
 
-print("✅ Database seeded successfully!")
+print(" Database seeded successfully!")
